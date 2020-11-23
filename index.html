@@ -4,10 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        html{
+            height:100%;
+        }
+        body{
+            height:100%;
+            margin:0;
+        }
+        .bets{
+            box-sizing:border-box;
+            overflow:auto;
+            width:50%;
+            border-right: 2.25px solid #1c476c;
+        }
+        .calculator{
+            box-sizing:border-box;
+            width:50%;
+            padding:0px 8px;
+            display:flex;
+        }
+        .container{
+            height:100%;
+            display:flex;
+            background: linear-gradient(to right,#2c5364, #203a43, #0f2027);
+        }
+        .coeff{
+            width: 100px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .coeff span:first-child{
+            color:#7AAAD3;
+        }
+        .coeff span:nth-child(2){
+           display:flex;
+           justify-content:flex-start;
+        }
+        .calc{
+            width: 450px;
+    justify-content: space-between;
+    margin: 20px auto;
+        }
+        .calc >div{
+            width:100%;
+        }
+        .calc > div >div{
+            display:flex;
+            margin-bottom: 10px;
+        } 
+        .calc span{
+            font-family: Arial, "Lato", "Helvetica Neue";
+            margin-right:10px;
+            color:#fff;
+        }
+        .calc input:focus{
+            outline:none;
+        }
+        .item{
+            box-sizing:border-box;
+            font-family: Arial, "Lato", "Helvetica Neue";
+            font-weight: bold;
+            font-size: 14px;
+            width:100%;
+        }
+        .item-header{
+            box-sizing:border-box;
+            padding: 5px 10px;
+            color:#fff;
+            background-color: #7AAAD3;
+            width:100%;
+        }
+        .item-content{
+            background:#fff;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+        .item-content >div{
+            background: #fff;
+    display: flex;
+    justify-content: space-between;
+    max-width: 80%;
+    margin: auto;
+    padding: 12px 0px;
+        }
+
+        .form__label {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  margin-left: 2rem;
+  margin-top: 0.7rem;
+  display: block;
+  transition: all 0.3s;
+  transform: translateY(0rem);
+}
+
+.form__input {
+    width: 100%;
+    padding: 10px 5px;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  font-size: 1.2rem;
+	margin: 0 auto;
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  background-color: rgb(255, 255, 255);
+  border: none;
+  display: block;
+  border-bottom: 0.3rem solid transparent;
+  transition: all 0.3s;
+}
+
+.form__input:placeholder-shown + .form__label {
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transform: translateY(-4rem);
+  transform: translateY(-4rem);
+}
+
+
+@media only screen and (max-width: 1000px) {
+.container{
+    flex-direction:column;
+    flex-direction: column-reverse;
+}
+.bets{
+    width:100%;
+}
+.calculator{
+    width:100%;
+    margin-bottom:auto;
+}
+.bet-stats{
+    margin: auto;
+    display:flex;
+    justify-content: center;
+}
+.coeff{
+            width: 50px;
+        }
+        .item-content >div{
+    max-width: 90%;
+ }
+}
+
+    </style>
 </head>
 <body>
   
-    
+    <div class="container">
+        <div class="bets">
+        </div>
+        <div class='calculator'>
+            <div class="calc">
+                <div>
+                    <div class="form__group field">
+                       <input type="number" class="crystal-stake form__input" placeholder="Crystal Stake">
+                    </div>
+                    <div class="form__group field">
+                        <input type="number" class="betfair-coeff form__input" placeholder="Adjara Coeff">
+                     </div>
+                     <div class="form__group field">
+                        <input type="number" class="crystal-coeff form__input" placeholder="Crystal Coeff">
+                     </div>
+                </div>
+                <div class="bet-stats">
+
+                </div>
+            </div>
+        </div>
+    </div>
     <script src ="/socket.io/socket.io.js"> </script>
     <script src ="/js/script.js"> </script>
 </body>

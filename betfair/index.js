@@ -21,6 +21,9 @@ class Betfair {
 			? odd.runners[num].exchange.availableToLay[0].price
 			: null;
 	}
+	addZeroBefore(n) {
+		return (n < 10 ? "0" : "") + n;
+	}
 	async getBetfairMarkets() {
 		try {
 			let betfairMarkets = await axios.post(
@@ -46,12 +49,19 @@ class Betfair {
 			res.data.eventTypes[0].eventNodes.forEach((item) => {
 				let odds = item.marketNodes;
 				let eventName = item.event.eventName.split(" v ");
+				let time = new Date(item.event.openDate);
+
 				const game = {
 					teams: [],
 					results: [],
+					time: "",
 				};
 				game["teams"].push(eventName[0].trim());
 				game["teams"].push(eventName[1].trim());
+				game.time +=
+					this.addZeroBefore(time.getHours()) +
+					":" +
+					this.addZeroBefore(time.getMinutes());
 
 				for (let i = 0; i < odds.length; i++) {
 					let odd = odds[i];

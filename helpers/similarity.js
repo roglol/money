@@ -24,11 +24,12 @@ class SexyOdds {
 						this.similarity(
 							converter(odds.teams[0].trim()).toLowerCase(),
 							item.teams[0].toLowerCase(),
-						) > 0.5 &&
+						) > 0.4 &&
 						this.similarity(
 							converter(odds.teams[1].trim()).toLowerCase(),
 							item.teams[1].toLowerCase(),
-						) > 0.5;
+						) > 0.4 &&
+						odds.time === item.time;
 					if (found) {
 						betfairOdds[key].found = true;
 						return true;
@@ -39,18 +40,24 @@ class SexyOdds {
 			if (betfair) {
 				if (betfair.results[0] && betfair.results[0] < odds.results[0]) {
 					obj["type"] = odds["teams"][0] + " defeats " + odds["teams"][1];
+					obj.event= odds["teams"][0] + ' - ' + odds["teams"][1];
+					obj.oddType = 1;
 					obj.betfair = betfair.results[0];
 					obj.crystal = odds.results[0];
 					egaa.push(obj);
 				}
 				if (betfair.results[1] && betfair.results[1] < odds.results[1]) {
 					obj["type"] = odds["teams"][1] + " defeats " + odds["teams"][0];
+					obj.event= odds["teams"][0] + ' - ' + odds["teams"][1];
+					obj.oddType = 2;
 					obj.betfair = betfair.results[1];
 					obj.crystal = odds.results[1];
 					egaa.push(obj);
 				}
 				if (betfair.results[2] && betfair.results[2] < odds.results[2]) {
 					obj["type"] = odds["teams"][1] + " draws " + odds["teams"][0];
+					obj.event= odds["teams"][0] + ' - ' + odds["teams"][1];
+					obj.oddType = 'draw';
 					obj.betfair = betfair.results[2];
 					obj.crystal = odds.results[2];
 					egaa.push(obj);
@@ -60,15 +67,13 @@ class SexyOdds {
 		return egaa;
 	}
 
-	async generateSexyOdds() {
-		this.sports.forEach(async (sport) => {
-			let crystal = new Crystal(sport);
-			let sexyCrystal = await crystal.getSexyOdds();
-			let betfair = new Betfair(sport);
-			let sexyBetfair = await betfair.getSexyOdds();
-			let sexyOdds = this.compare(sexyBetfair, sexyCrystal);
-			this.socket.emit("odds", sexyOdds);
-		});
+	async generateSexyOdds(sport) {
+		let crystal = new Crystal(sport);
+		let sexyCrystal = await crystal.getSexyOdds();
+		let betfair = new Betfair(sport);
+		let sexyBetfair = await betfair.getSexyOdds();
+		let sexyOdds = this.compare(sexyBetfair, sexyCrystal);
+		return sexyOdds;
 	}
 }
 
