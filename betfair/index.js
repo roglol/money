@@ -1,20 +1,13 @@
-const { football, basketball, darts } = require("./formData");
+const { formData, sports } = require("./formData");
 const axios = require("axios");
+var https = require("https");
+axios.defaults.timeout = 30000;
+axios.defaults.httpsAgent = new https.Agent({ keepAlive: true });
 
 class Betfair {
-	constructor(type) {
-		this.sport = type;
-		switch (type) {
-			case "football":
-				this.formData = football;
-				break;
-			case "basketball":
-				this.formData = basketball;
-				break;
-			case "darts":
-				this.formData = darts;
-				break;
-		}
+	constructor(sport) {
+		this.formData = formData;
+		this.formData.filter.eventTypeIds.push(sports[sport]);
 	}
 	runnerOdd(odd, num) {
 		return odd.runners[num] && odd.runners[num].exchange.availableToLay
@@ -46,18 +39,27 @@ class Betfair {
 			let id = markets.slice(i, i + 25).join(",");
 			let url = `https://ero.betfair.com/www/sports/exchange/readonly/v1/bymarket?_ak=nzIFcwyWhrlwYMrh&alt=json&currencyCode=GEL&regionCode=GEO&locale=en&marketIds=${id}&rollupLimit=25&rollupModel=STAKE&types=MARKET_STATE,MARKET_RATES,MARKET_DESCRIPTION,EVENT,RUNNER_DESCRIPTION,RUNNER_STATE,RUNNER_EXCHANGE_PRICES_BEST,RUNNER_METADATA,MARKET_LICENCE,MARKET_LINE_RANGE_INFO`;
 			let res = await axios.get(url);
+
 			res.data.eventTypes[0].eventNodes.forEach((item) => {
 				let odds = item.marketNodes;
-				let eventName = item.event.eventName.split(" v ");
+				let eventName;
+				if (item.event.eventName.includes(" v ")) {
+					eventName = item.event.eventName.split(" v ");
+				} else if (item.event.eventName.includes(" @ ")) {
+					eventName = item.event.eventName.split(" @ ");
+				}
+
 				let time = new Date(item.event.openDate);
 
 				const game = {
+					sport: this.sport,
 					teams: [],
 					results: [],
+					yesno: [],
 					time: "",
 				};
-				game["teams"].push(eventName[0].trim());
-				game["teams"].push(eventName[1].trim());
+				game["teams"].push(eventName[0]);
+				game["teams"].push(eventName[1]);
 				game.time +=
 					this.addZeroBefore(time.getHours()) +
 					":" +
@@ -67,14 +69,14 @@ class Betfair {
 					let odd = odds[i];
 					let marketType = odd.description.marketType;
 
-					if (marketType === "MATCH_ODDS" && this.sport === "football") {
+					if (marketType === "MATCH_ODDS") {
 						game["results"].push(this.runnerOdd(odd, 0));
 						game["results"].push(this.runnerOdd(odd, 1));
 						game["results"].push(this.runnerOdd(odd, 2));
 					}
-					if (marketType === "MATCH_ODDS" && this.sport === "darts") {
-						game["results"].push(this.runnerOdd(odd, 0));
-						game["results"].push(this.runnerOdd(odd, 1));
+					if (marketType === "BOTH_TEAMS_TO_SCORE") {
+						game["yesno"].push(this.runnerOdd(odd, 0));
+						game["yesno"].push(this.runnerOdd(odd, 1));
 					}
 				}
 				sexyOdds.push(game);

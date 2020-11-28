@@ -2,6 +2,7 @@ const socket = io("http://localhost:4000");
 
 let arbs = document.querySelector(".bets");
 socket.on("odds", (data) => {
+	console.log("success");
 	arbs.innerHTML = "";
 	data.forEach((item) => {
 		if (worthyOdds(item.betfair, item.crystal)) {
@@ -10,7 +11,7 @@ socket.on("odds", (data) => {
 				`
 			<div class="item">
 			<div class="item-header">
-			   Football
+			   ${item.sport}
 			</div>
 			<div class="item-content">
 				<div>

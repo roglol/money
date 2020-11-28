@@ -1,14 +1,14 @@
-const football = {
+const formData = {
 	filter: {
 		marketBettingTypes: ["ODDS"],
 		productTypes: ["EXCHANGE"],
-		marketTypeCodes: ["MATCH_ODDS"],
+		marketTypeCodes: ["MATCH_ODDS", "BOTH_TEAMS_TO_SCORE"],
 		selectBy: "RANK",
 		contentGroup: { language: "en", regionCode: "UK" },
 		turnInPlayEnabled: true,
 		inPlay: false,
 		maxResults: 0,
-		eventTypeIds: [1],
+		eventTypeIds: [],
 	},
 	facets: [
 		{
@@ -29,70 +29,14 @@ const football = {
 	locale: "en",
 };
 
-const basketball = {
-	filter: {
-		marketBettingTypes: ["ODDS"],
-		productTypes: ["EXCHANGE"],
-		marketTypeCodes: ["MATCH_ODDS"],
-		selectBy: "RANK",
-		contentGroup: { language: "en", regionCode: "UK" },
-		turnInPlayEnabled: true,
-		inPlay: false,
-		maxResults: 0,
-		eventTypeIds: [7522],
-	},
-	facets: [
-		{
-			type: "EVENT_TYPE",
-			skipValues: 0,
-			next: {
-				type: "COMPETITION",
-				skipValues: 0,
-				next: {
-					type: "EVENT",
-					skipValues: 0,
-					next: { type: "MARKET", next: { type: "COMPETITION" } },
-				},
-			},
-		},
-	],
-	currencyCode: "USD",
-	locale: "en",
-};
-
-const darts = {
-	filter: {
-		marketBettingTypes: ["ODDS"],
-		productTypes: ["EXCHANGE"],
-		marketTypeCodes: ["MATCH_ODDS"],
-		selectBy: "RANK",
-		contentGroup: { language: "en", regionCode: "UK" },
-		turnInPlayEnabled: true,
-		inPlay: false,
-		maxResults: 0,
-		eventTypeIds: [3503],
-	},
-	facets: [
-		{
-			type: "EVENT_TYPE",
-			skipValues: 0,
-			next: {
-				type: "COMPETITION",
-				skipValues: 0,
-				next: {
-					type: "EVENT",
-					skipValues: 0,
-					next: { type: "MARKET", next: { type: "COMPETITION" } },
-				},
-			},
-		},
-	],
-	currencyCode: "USD",
-	locale: "en",
+let sports = {
+	football: 1,
+	basketball: 7522,
+	darts: 3503,
+	tennis: 2,
 };
 
 module.exports = {
-	football,
-	basketball,
-	darts,
+	formData,
+	sports,
 };
