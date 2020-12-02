@@ -1,9 +1,18 @@
 const socket = io("http://localhost:4000");
 
 let arbs = document.querySelector(".bets");
+
+
+	let playFunc = () => {
+	let aud = 	document.querySelector('.my_audio');
+	aud.muted = false;
+	aud.play();
+	}
+
 socket.on("odds", (data) => {
-	console.log("success");
 	arbs.innerHTML = "";
+	
+
 	data.forEach((item) => {
 		if (worthyOdds(item.betfair, item.crystal)) {
 			arbs.insertAdjacentHTML(
@@ -31,6 +40,7 @@ socket.on("odds", (data) => {
 			</div>
 			</div>`,
 			);
+	playFunc();
 		}
 	});
 });

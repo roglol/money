@@ -5,6 +5,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const SexyOdds = require("./helpers/similarity");
 var stringSimilarity = require("string-similarity");
+const cors = require('cors');
 
 io.on("connection", async function (socket) {
 	await generate(socket);
@@ -27,6 +28,7 @@ function similarity(a, b) {
 
 app.use("/js", express.static(path.join(__dirname, "/js")));
 app.use("/", express.static(path.join(__dirname, "/public")));
+app.use(cors());
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"));
 
 server.listen(4000, () => console.log("http://localhost:4000"));
