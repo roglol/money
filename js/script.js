@@ -1,10 +1,15 @@
 const socket = io("http://localhost:4000");
+let sexyOdds = [];
 
 let arbs = document.querySelector(".bets");
-socket.on("odds", (data) => {
-	console.log("success");
+socket.on("odds", (payload) => {
+	console.log(payload);
 	arbs.innerHTML = "";
-	data.forEach((item) => {
+	sexyOdds = sexyOdds.filter(
+		(item) => item.sport.toLowerCase() !== payload.sport.toLowerCase(),
+	);
+	sexyOdds = sexyOdds.concat(payload.data);
+	sexyOdds.forEach((item) => {
 		if (worthyOdds(item.betfair, item.crystal)) {
 			arbs.insertAdjacentHTML(
 				"beforeend",
@@ -12,7 +17,7 @@ socket.on("odds", (data) => {
 			<div class="item">
 			<div class="item-header">
 			   ${item.sport}
-			</div>
+			</div> 
 			<div class="item-content">
 				<div>
 					<div class="name">${item.event}</div>

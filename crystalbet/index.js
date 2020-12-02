@@ -14,6 +14,7 @@ class Crystal {
 				headless: true,
 			});
 			this.page = await this.browser.newPage();
+			this.page.setViewport({ width: 960, height: 768 });
 			await this.page.setDefaultNavigationTimeout(0);
 			await this.page.goto("https://www.crystalbet.com/Pages/Sports.aspx", {
 				waitUntil: "load",
@@ -94,7 +95,7 @@ class Crystal {
 						) {
 							obj.time = div.querySelector(".time").innerText;
 						}
-						obj.sport = sportName;
+						obj.sport = sportName[0];
 						data.push(obj);
 					}
 					return data;
