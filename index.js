@@ -16,7 +16,7 @@ async function generate(socket) {
 	for (let i = 0; i < sports.length; i++) {
 		const sexyOdds = new SexyOdds(sports[i]);
 		let odds = await sexyOdds.generateSexyOdds();
-		socket.emit("odds", odds);
+		socket.emit("odds", { sport: sports[i], data: odds });
 	}
 	await generate(socket);
 }
