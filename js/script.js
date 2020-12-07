@@ -2,10 +2,10 @@ const socket = io("http://localhost:4000");
 let sexyOdds = [];
 
 let playFunc = () => {
-	let aud = 	document.querySelector('.my_audio');
+	let aud = document.querySelector(".my_audio");
 	aud.muted = false;
 	aud.play();
-	}
+};
 
 let arbs = document.querySelector(".bets");
 socket.on("odds", (payload) => {
@@ -42,7 +42,7 @@ socket.on("odds", (payload) => {
 			</div>
 			</div>`,
 			);
-	playFunc();
+			// playFunc();
 		}
 	});
 });

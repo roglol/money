@@ -14,7 +14,7 @@ class Crystal {
 				headless: true,
 			});
 			this.page = await this.browser.newPage();
-			this.page.setViewport({ width: 960, height: 768 });
+			await this.page.setViewport({ width: 1280, height: 720 });
 			await this.page.setDefaultNavigationTimeout(0);
 			await this.page.goto("https://www.crystalbet.com/Pages/Sports.aspx", {
 				waitUntil: "load",
@@ -24,7 +24,7 @@ class Crystal {
 			console.log(error);
 			console.error("tyyy errrorrr");
 			await this.browser.close();
-			await this.init();
+			await this.page.close();
 		}
 	}
 
@@ -33,12 +33,19 @@ class Crystal {
 			await this.init();
 			await this.page.waitForSelector(sport);
 			await this.page.click(sport);
+
 			await this.page.waitForSelector(".show-all .new_sport_country");
+
 			await this.page.click(".show-all .new_sport_country");
+
 			await this.page.waitForSelector(".head1_1_new");
+
 			await this.page.click(".head1_1_new");
+
 			await this.page.waitForSelector(".head1_1_new_sub > .en");
+
 			await this.page.click(".head1_1_new_sub > .en");
+
 			await this.page.waitForNavigation();
 			const sportName = await this.page.$$eval(sport, (links) =>
 				links.map(
@@ -108,7 +115,7 @@ class Crystal {
 			console.log(error);
 			console.error("tyyy errrorrr boloshi to");
 			await this.browser.close();
-			await this.init();
+			await this.page.close();
 		}
 	}
 

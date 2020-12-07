@@ -5,7 +5,7 @@ const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const SexyOdds = require("./helpers/similarity");
 var stringSimilarity = require("string-similarity");
-const cors = require('cors');
+const cors = require("cors");
 
 io.on("connection", async function (socket) {
 	await generate(socket);

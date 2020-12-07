@@ -15,6 +15,9 @@ class SexyOdds {
 
 	compare(betfairOdds, bookieOdds) {
 		const egaa = [];
+		if (!bookieOdds) {
+			return egaa;
+		}
 		for (let i = 0; i < bookieOdds.length; i++) {
 			let odds = bookieOdds[i];
 			const betfair = betfairOdds.find((item, key) => {
