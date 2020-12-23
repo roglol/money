@@ -4,7 +4,6 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 const SexyOdds = require("./helpers/similarity");
-var stringSimilarity = require("string-similarity");
 const cors = require("cors");
 
 io.on("connection", async function (socket) {
@@ -12,18 +11,13 @@ io.on("connection", async function (socket) {
 });
 
 async function generate(socket) {
-	let sports = ["football"];
+	let sports = ["football","basketball"];
 	for (let i = 0; i < sports.length; i++) {
 		const sexyOdds = new SexyOdds(sports[i]);
 		let odds = await sexyOdds.generateSexyOdds();
 		socket.emit("odds", { sport: sports[i], data: odds });
 	}
 	await generate(socket);
-}
-
-function similarity(a, b) {
-	var similar = stringSimilarity.compareTwoStrings(a, b);
-	return similar;
 }
 
 app.use("/js", express.static(path.join(__dirname, "/js")));

@@ -42,7 +42,7 @@ socket.on("odds", (payload) => {
 			</div>
 			</div>`,
 			);
-			// playFunc();
+			playFunc();
 		}
 	});
 });

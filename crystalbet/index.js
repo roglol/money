@@ -1,15 +1,18 @@
 const puppeteer = require("puppeteer");
-const { sports } = require("./types");
+const { types } = require("./types");
 
 class Crystal {
 	constructor(sport) {
-		this.sport = sports[sport];
+		this.type = types[sport];
+		this.sport=sport;
 		this.page = null;
 		this.browser = null;
 	}
 
-	async init() {
+
+	async getCategoryGames(type) {
 		try {
+			let sport = this.sport
 			this.browser = await puppeteer.launch({
 				headless: true,
 			});
@@ -20,23 +23,11 @@ class Crystal {
 				waitUntil: "load",
 				timeout: 0,
 			});
-		} catch (error) {
-			console.log(error);
-			console.error("tyyy errrorrr");
-			await this.browser.close();
-			await this.page.close();
-		}
-	}
-
-	async getCategoryGames(sport) {
-		try {
-			await this.init();
-			await this.page.waitForSelector(sport);
-			await this.page.click(sport);
-
-			await this.page.waitForSelector(".show-all .new_sport_country");
-
-			await this.page.click(".show-all .new_sport_country");
+            if(type !=2){
+				let selector =`.tp-sport-type:nth-child(${type})`
+				await this.page.waitForSelector(selector);
+				await this.page.click(selector);
+			}
 
 			await this.page.waitForSelector(".head1_1_new");
 
@@ -47,16 +38,11 @@ class Crystal {
 			await this.page.click(".head1_1_new_sub > .en");
 
 			await this.page.waitForNavigation();
-			const sportName = await this.page.$$eval(sport, (links) =>
-				links.map(
-					(link) => link.querySelector(".sport_menu_new_title").innerText,
-				),
-			);
+
 			await this.page.waitForSelector(".games-holder");
 			const sexyOdds = await this.page.$$eval(
 				".games-holder  .GContainerList",
-				(a, sportName) => {
-					console.log(sportName);
+				(a,sport) => {
 					const data = [];
 					for (div of a) {
 						let obj = {
@@ -72,10 +58,10 @@ class Crystal {
 							teams[1] && obj.teams.push(teams[1].trim());
 						}
 						if (
-							sportName[0] === "Football" &&
 							div.querySelector(".col0") &&
 							div.querySelector(".col1") &&
-							div.querySelector(".col2")
+							div.querySelector(".col2") &&
+							sport === 'football'
 						) {
 							div.querySelector(".col0").innerText &&
 								obj.results.push(div.querySelector(".col0").innerText.trim());
@@ -89,12 +75,14 @@ class Crystal {
 								div.querySelector(".col12").innerText &&
 									obj.yesno.push(div.querySelector(".col12").innerText.trim());
 							}
-						}
-						if (div.querySelector(".col0") && div.querySelector(".col1")) {
+						}else if(
+						div.querySelector(".col0") &&
+						div.querySelector(".col1") 
+						){
 							div.querySelector(".col0").innerText &&
-								obj.results.push(div.querySelector(".col0").innerText.trim());
+							obj.results.push(div.querySelector(".col0").innerText.trim());
 							div.querySelector(".col1").innerText &&
-								obj.results.push(div.querySelector(".col1").innerText.trim());
+							obj.results.push(div.querySelector(".col1").innerText.trim());
 						}
 						if (
 							div.querySelector(".time") &&
@@ -102,12 +90,12 @@ class Crystal {
 						) {
 							obj.time = div.querySelector(".time").innerText;
 						}
-						obj.sport = sportName[0];
+						obj.sport = sport
 						data.push(obj);
 					}
 					return data;
 				},
-				sportName,
+				sport
 			);
 			await this.browser.close();
 			return sexyOdds;
@@ -115,12 +103,11 @@ class Crystal {
 			console.log(error);
 			console.error("tyyy errrorrr boloshi to");
 			await this.browser.close();
-			await this.page.close();
 		}
 	}
 
 	async getSexyOdds() {
-		let output = await this.getCategoryGames(this.sport);
+		let output = await this.getCategoryGames(this.type);
 		return output;
 	}
 }
